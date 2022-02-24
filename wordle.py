@@ -16,11 +16,11 @@ from vocab import Vocabulary
 
 
 class Wordle:
-    def __init__(self, max_attempts=6, seed=None):
+    def __init__(self, max_attempts=6, seed='today'):
         self.vocabulary = Vocabulary()
         self.console = Console()
 
-        if seed is None:
+        if seed == 'today':
             today = datetime.date.today()
             seed = today.year * 10000 + today.month * 100 + today.day
 
@@ -75,7 +75,7 @@ class Wordle:
                 self.attempts[self.num_attempts].extend(result)
                 self.num_attempts += 1
 
-            if self.num_attempts == self.max_attempts:
+            if self.num_attempts == self.max_attempts and not self.solved:
                 self.failed = True
                 self.message("Oops.. No more attempts left!", style="bold red")
 
@@ -121,9 +121,29 @@ class Wordle:
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="Wordle on your terminal")
-    wordle = Wordle()
+    parser.add_argument(
+        "--random",
+        action="store_true",
+        help="Show a random Wordle"
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help="Seed the RNG"
+    )
+    args = vars(parser.parse_args())
+
+    if args.get("random"):
+        wordle = Wordle(seed=None)
+    elif args.get("seed"):
+        wordle = Wordle(seed=args.get("seed"))
+    else:
+        wordle = Wordle()
 
     wordle.show()
     while not wordle.solved and not wordle.failed:
         guess = input("Guess: ")
         wordle.guess(guess)
+
+    if args.get("random") and wordle.failed:
+        wordle.message(f"The word was '{wordle.word}'.")
