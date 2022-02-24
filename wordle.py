@@ -39,6 +39,7 @@ class Wordle:
         ])
         self.alphabet = {chr(i): -1 for i in range(97, 123)}
         self.solved = False
+        self.failed = False
 
     def message(self, msg, style="bold yellow"):
         self.console.print(Panel(msg), justify="center", style=style)
@@ -73,6 +74,10 @@ class Wordle:
                 self.attempts[self.num_attempts].clear()
                 self.attempts[self.num_attempts].extend(result)
                 self.num_attempts += 1
+
+            if self.num_attempts == self.max_attempts:
+                self.failed = True
+                self.message("Oops.. No more attempts left!", style="bold red")
 
         self.show()
 
@@ -109,3 +114,16 @@ class Wordle:
             ),
             justify="center"
         )
+
+###############################################################################
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description="Wordle on your terminal")
+    wordle = Wordle()
+
+    wordle.show()
+    while not wordle.solved and not wordle.failed:
+        guess = input("Guess: ")
+        wordle.guess(guess)
