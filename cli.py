@@ -40,6 +40,7 @@ if __name__ == '__main__':
 
     if args.get("solve"):
         solver = WordleSolver(wordle)
+        solver.solve()
     else:
         wordle.show()
         while not wordle.solved and not wordle.failed:
