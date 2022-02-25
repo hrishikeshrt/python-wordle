@@ -16,12 +16,12 @@ from vocab import Vocabulary
 
 
 class Wordle:
-    def __init__(self, max_attempts=6, seed='today', display=False):
+    def __init__(self, max_attempts=6, seed="today", display=False):
         self.vocabulary = Vocabulary()
         self.console = Console()
         self.display = display
 
-        if seed == 'today':
+        if seed == "today":
             today = datetime.date.today()
             seed = today.year * 10000 + today.month * 100 + today.day
 

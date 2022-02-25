@@ -31,13 +31,18 @@ COVERAGE_CACHE = "coverage.json"
 
 
 class WordleSolver:
-    def __init__(self, wordle: Wordle, coverage_cache=COVERAGE_CACHE):
+    def __init__(
+        self,
+        wordle: Wordle = None,
+        coverage_cache: str = COVERAGE_CACHE
+    ):
         self.wordle = wordle
         self.vocabulary = Vocabulary()
         self.valid_words = set(self.vocabulary.vocab)
+        self.num_attempts = 0
+        self.known_letters = {}
 
         self.build_graph()
-        self.known_letters = {}
 
         if os.path.isfile(coverage_cache):
             with open(coverage_cache, mode="r") as f:
@@ -97,12 +102,18 @@ class WordleSolver:
         return Counter({
             k: v for k, v in self.score.items()
             if (
-                not set(k).intersection(set(self.known_letters) - allow_letters)
+                not set(k).intersection(
+                    set(self.known_letters) - allow_letters
+                )
                 and v < 100
             )
         }).most_common()[:n]
 
     def handle_result(self, result):
+        if not result:
+            return
+
+        self.num_attempts += 1
         eliminate_markers = set()
         remove_words = set()
         for idx, (letter, score) in enumerate(result):
@@ -122,6 +133,10 @@ class WordleSolver:
         self.eliminate(eliminate_markers, words=remove_words)
 
     def guess(self, option=None):
+        if self.wordle is None:
+            LOGGER.error("No Wordle is defined.")
+            return False
+
         THRESHOLD = 5
         if option is None:
             options = self.best_options()
@@ -144,8 +159,12 @@ class WordleSolver:
         if result:
             self.handle_result(result)
             if self.wordle.solved:
-                LOGGER.info(f"Solved in {self.wordle.num_attempts} attempts.")
+                LOGGER.info(f"Solved in {self.num_attempts} attempts.")
 
     def solve(self):
+        if self.wordle is None:
+            LOGGER.error("No Wordle is defined.")
+            return False
+
         while not self.wordle.solved and not self.wordle.failed:
             self.guess()
