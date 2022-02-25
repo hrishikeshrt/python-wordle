@@ -21,7 +21,6 @@ from wordle import Wordle
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
-LOGGER.hasHandlers() or LOGGER.addHandler(logging.StreamHandler())
 
 ###############################################################################
 
@@ -97,15 +96,18 @@ class WordleSolver:
         LOGGER.info(f"Eliminated {count_before - count_after} options.")
         self.reset_score()
 
-    def best_options(self, n: int = 10, allow_letters: set = None):
-        allow_letters = allow_letters or set()
+    def best_options(self, n: int = 10, use_known_letters: bool = False):
+
+        if use_known_letters:
+            intersection_set = set(self.known_letters)
+        else:
+            intersection_set = set()
+
         return Counter({
             k: v for k, v in self.score.items()
             if (
-                not set(k).intersection(
-                    set(self.known_letters) - allow_letters
-                )
-                and v < 100
+                not set(k).intersection(intersection_set)
+                and 0 < v < 100
             )
         }).most_common()[:n]
 
@@ -137,20 +139,29 @@ class WordleSolver:
             LOGGER.error("No Wordle is defined.")
             return False
 
-        THRESHOLD = 5
-        if option is None:
-            options = self.best_options()
-            option, coverage = options[0]
-            if coverage <= THRESHOLD:
-                options = self.best_options(allow_letters=set('aesri'))
-        else:
-            coverage = self.coverage(option)
-
         # if less valid words than number of attempts left
         # just guess them all
         attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
-        if len(self.valid_words) <= attempts_left:
-            option = max(self.valid_words, key=lambda x: self.coverage(x))
+        choose_from_valid_words = len(self.valid_words) <= attempts_left
+
+        coverage_threshold = 5
+        if option is None:
+            options = self.best_options()
+            if options:
+                option, coverage = options[0]
+                if coverage <= coverage_threshold:
+                    options = self.best_options(use_known_letters=True)
+                    if options:
+                        option, coverage = options[0]
+                    else:
+                        choose_from_valid_words = True
+            else:
+                choose_from_valid_words = True
+
+            if choose_from_valid_words:
+                option = max(self.valid_words, key=lambda x: self.coverage(x))
+                coverage = self.coverage(option)
+        else:
             coverage = self.coverage(option)
 
         LOGGER.info(f"Guessing '{option}' (Coverage: {coverage})")
