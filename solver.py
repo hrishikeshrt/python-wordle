@@ -11,7 +11,6 @@ import json
 import logging
 from collections import Counter
 from functools import cached_property
-from re import L
 
 import networkx as nx
 
