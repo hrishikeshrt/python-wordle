@@ -16,7 +16,7 @@ valid words at any given point := words from vocabulary that are possible soluti
 coverage of a word := percentage of valid words that contain at least one letter from the word
 ```
 
-Solver uses the following strategy:
+Solver roughly uses the following strategy,
 
 * Guess a word with highest coverage.
 * After each guess, eliminate words based on the clues, e.g.,
@@ -26,7 +26,7 @@ Solver uses the following strategy:
     * Remove all words that do not contain a `correct-letter`
     * Re-calculate coverage and guess again
 * If at any point, number of valid words drops below number of attempts left, guess the valid words one-by-one.
-    
+* Additionally, there are heuristics to choose a word if multiple words with best coverage-score exist.
 
 ## How to play?
 
