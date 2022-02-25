@@ -16,9 +16,10 @@ from vocab import Vocabulary
 
 
 class Wordle:
-    def __init__(self, max_attempts=6, seed='today'):
+    def __init__(self, max_attempts=6, seed='today', display=False):
         self.vocabulary = Vocabulary()
         self.console = Console()
+        self.display = display
 
         if seed == 'today':
             today = datetime.date.today()
@@ -42,10 +43,13 @@ class Wordle:
         self.failed = False
 
     def message(self, msg, style="bold yellow"):
-        self.console.print(Panel(msg), justify="center", style=style)
+        if self.display:
+            self.console.print(Panel(msg), justify="center", style=style)
 
     def guess(self, word):
         word = word.lower()
+        result = []
+
         if self.num_attempts == self.max_attempts:
             self.message("No more attempts left.", style="bold red")
         elif self.solved:
@@ -53,7 +57,6 @@ class Wordle:
         elif not self.vocabulary.is_word(word):
             self.message(f"'{word}' is not a valid word.", style="bold red")
         else:
-            result = []
             total_score = 0
             for position, letter in enumerate(word):
                 score = sum([
@@ -79,7 +82,10 @@ class Wordle:
                 self.failed = True
                 self.message("Oops.. No more attempts left!", style="bold red")
 
-        self.show()
+        if self.display:
+            self.show()
+
+        return result
 
     def show(self, style=None):
         if style is None:
@@ -116,34 +122,3 @@ class Wordle:
         )
 
 ###############################################################################
-
-
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser(description="Wordle on your terminal")
-    parser.add_argument(
-        "--random",
-        action="store_true",
-        help="Show a random Wordle"
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        help="Seed the RNG"
-    )
-    args = vars(parser.parse_args())
-
-    if args.get("random"):
-        wordle = Wordle(seed=None)
-    elif args.get("seed"):
-        wordle = Wordle(seed=args.get("seed"))
-    else:
-        wordle = Wordle()
-
-    wordle.show()
-    while not wordle.solved and not wordle.failed:
-        guess = input("Guess: ")
-        wordle.guess(guess)
-
-    if args.get("random") and wordle.failed:
-        wordle.message(f"The word was '{wordle.word}'.")
