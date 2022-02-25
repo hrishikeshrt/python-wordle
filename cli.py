@@ -6,8 +6,15 @@ CLI for Wordle
 @author: Hrishikesh Terdalkar
 """
 
+import logging
+
 from wordle import Wordle
 from solver import WordleSolver
+
+###############################################################################
+
+LOGGER = logging.getLogger()
+LOGGER.hasHandlers() or LOGGER.addHandler(logging.StreamHandler())
 
 ###############################################################################
 
