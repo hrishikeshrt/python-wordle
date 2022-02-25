@@ -39,16 +39,18 @@ class WordleSolver:
         self.vocabulary = Vocabulary()
         self.valid_words = set(self.vocabulary.vocab)
         self.num_attempts = 0
+        self.guesses = {}
+
         self.known_letters = {}
 
         self.build_graph()
 
         if os.path.isfile(coverage_cache):
             with open(coverage_cache, mode="r") as f:
-                self.score = json.load(f)
+                self.coverage = json.load(f)
         else:
             with open(coverage_cache, mode="w") as f:
-                json.dump(self.score, f, indent=2)
+                json.dump(self.coverage, f, indent=2)
 
     def build_graph(self):
         self.graph = nx.DiGraph()
@@ -60,7 +62,7 @@ class WordleSolver:
                     self.graph.add_edge(letter, word)
                     self.markers.add(letter)
 
-    def coverage(self, letters):
+    def calculate_coverage(self, letters):
         node_boundary = nx.algorithms.boundary.node_boundary(
             self.graph, set(letters)
         )
@@ -68,15 +70,15 @@ class WordleSolver:
         return len(node_boundary) / graph_words_count * 100
 
     @cached_property
-    def score(self):
+    def coverage(self):
         return {
-            word: self.coverage(word)
+            word: self.calculate_coverage(word)
             for word in self.vocabulary.vocab
         }
 
-    def reset_score(self):
-        if hasattr(self, 'score'):
-            delattr(self, 'score')
+    def reset_coverage(self):
+        if hasattr(self, 'coverage'):
+            delattr(self, 'coverage')
 
     def eliminate(self, markers, words=None):
         # marker is one of the following,
@@ -94,22 +96,73 @@ class WordleSolver:
         count_after = len(self.valid_words)
 
         LOGGER.info(f"Eliminated {count_before - count_after} options.")
-        self.reset_score()
+        self.reset_coverage()
 
-    def best_options(self, n: int = 10, use_known_letters: bool = False):
-
-        if use_known_letters:
-            intersection_set = set(self.known_letters)
-        else:
-            intersection_set = set()
+    def top_coverage(
+        self,
+        n: int = None,
+        avoid_set: set = None,
+        coverage_min: int = 0,
+        coverage_max: int = 100
+    ):
+        if avoid_set is None:
+            avoid_set = set()
 
         return Counter({
-            k: v for k, v in self.score.items()
+            k: v for k, v in self.coverage.items()
             if (
-                not set(k).intersection(intersection_set)
-                and 0 < v < 100
+                not set(k).intersection(avoid_set)
+                and coverage_min < v < coverage_max
             )
-        }).most_common()[:n]
+        }).most_common(n)
+
+    def best_options(self):
+        coverage_threshold = 50
+
+        # if less valid words than number of attempts left
+        # just guess them all
+        attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
+        choose_from_valid_words = len(self.valid_words) <= attempts_left
+        if choose_from_valid_words:
+            return self.options_from_valid_words()
+
+        avoid_set = {
+            k
+            for k, v in self.known_letters.items()
+            if isinstance(v, int)
+        }
+
+        options = self.top_coverage(n=100, avoid_set=avoid_set)
+        multiple_best_options = [
+            option
+            for option in options
+            if option[1] == options[0][1]
+        ]
+
+        pruned_options = []
+        for option in multiple_best_options:
+            _word, _coverage = option
+            if _word in self.guesses:
+                continue
+
+            for _position, _letter in enumerate(_word):
+                if isinstance(self.known_letters.get(_letter), set):
+                    if -_position in self.known_letters[_letter]:
+                        break
+            else:
+                pruned_options.append(option)
+
+        if not pruned_options or pruned_options[0][1] < coverage_threshold:
+            return self.options_from_valid_words()
+        else:
+            return pruned_options
+
+    def options_from_valid_words(self):
+        return sorted([
+            (word, self.calculate_coverage(word))
+            for word in self.valid_words
+            if word not in self.guesses
+        ], key=lambda x: x[1], reverse=True)
 
     def handle_result(self, result):
         if not result:
@@ -122,7 +175,11 @@ class WordleSolver:
             if score == 0:
                 eliminate_markers.add(letter)
             if score == 1:
-                self.known_letters[letter] = None
+                if letter not in self.known_letters:
+                    self.known_letters[letter] = set()
+                if isinstance(self.known_letters[letter], set):
+                    self.known_letters[letter].add(-idx)
+
                 eliminate_markers.add(f"{letter}{idx}")
                 for word in self.valid_words:
                     if letter not in word:
@@ -139,30 +196,11 @@ class WordleSolver:
             LOGGER.error("No Wordle is defined.")
             return False
 
-        # if less valid words than number of attempts left
-        # just guess them all
-        attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
-        choose_from_valid_words = len(self.valid_words) <= attempts_left
-
-        coverage_threshold = 5
         if option is None:
             options = self.best_options()
-            if options:
-                option, coverage = options[0]
-                if coverage <= coverage_threshold:
-                    options = self.best_options(use_known_letters=True)
-                    if options:
-                        option, coverage = options[0]
-                    else:
-                        choose_from_valid_words = True
-            else:
-                choose_from_valid_words = True
-
-            if choose_from_valid_words:
-                option = max(self.valid_words, key=lambda x: self.coverage(x))
-                coverage = self.coverage(option)
+            option, coverage = options[0]
         else:
-            coverage = self.coverage(option)
+            coverage = self.calculate_coverage(option)
 
         LOGGER.info(f"Guessing '{option}' (Coverage: {coverage})")
         result = self.wordle.guess(option)
