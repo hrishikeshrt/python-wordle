@@ -16,17 +16,21 @@ from vocab import Vocabulary
 
 
 class Wordle:
-    def __init__(self, max_attempts=6, seed="today", display=False):
+    def __init__(self, word=None, max_attempts=6, seed="today", display=False):
         self.vocabulary = Vocabulary()
         self.console = Console()
         self.display = display
 
-        if seed == "today":
-            today = datetime.date.today()
-            seed = today.year * 10000 + today.month * 100 + today.day
+        if word in self.vocabulary.vocab:
+            self.word = word
+        else:
+            if seed == "today":
+                today = datetime.date.today()
+                seed = today.year * 10000 + today.month * 100 + today.day
 
-        np.random.seed(seed)
-        self.word = np.random.choice(list(self.vocabulary.vocab))
+            np.random.seed(seed)
+            self.word = np.random.choice(list(self.vocabulary.vocab))
+
         self.letter_position = defaultdict(set)
         for position, letter in enumerate(self.word):
             self.letter_position[letter].add(position)
