@@ -71,7 +71,8 @@ class WordleSolver:
         }
 
     def reset_score(self):
-        delattr(self, 'score')
+        if hasattr(self, 'score'):
+            delattr(self, 'score')
 
     def eliminate(self, markers, words=None):
         # marker is one of the following,
@@ -95,7 +96,10 @@ class WordleSolver:
         allow_letters = allow_letters or set()
         return Counter({
             k: v for k, v in self.score.items()
-            if not set(k).intersection(set(self.known_letters) - allow_letters)
+            if (
+                not set(k).intersection(set(self.known_letters) - allow_letters)
+                and v < 100
+            )
         }).most_common()[:n]
 
     def handle_result(self, result):
@@ -127,6 +131,8 @@ class WordleSolver:
         else:
             coverage = self.coverage(option)
 
+        # if less valid words than number of attempts left
+        # just guess them all
         attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
         if len(self.valid_words) <= attempts_left:
             option = max(self.valid_words, key=lambda x: self.coverage(x))
