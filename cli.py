@@ -10,11 +10,12 @@ import logging
 
 from wordle import Wordle
 from solver import WordleSolver
+from settings import MAXIMUM_ATTEMPTS
 
 ###############################################################################
 
-LOGGER = logging.getLogger()
-LOGGER.hasHandlers() or LOGGER.addHandler(logging.StreamHandler())
+ROOT_LOGGER = logging.getLogger()
+ROOT_LOGGER.hasHandlers() or ROOT_LOGGER.addHandler(logging.StreamHandler())
 
 ###############################################################################
 
@@ -36,6 +37,11 @@ if __name__ == '__main__':
         action="store_true",
         help="Simulate WordleSolver"
     )
+    parser.add_argument(
+        "--helper",
+        action="store_true",
+        help="Take help from WordleSolver for a Wordle in a different platform"
+    )
     args = vars(parser.parse_args())
 
     if args.get("random"):
@@ -45,7 +51,39 @@ if __name__ == '__main__':
     else:
         wordle = Wordle(display=True)
 
-    if args.get("solve"):
+    if args.get("helper"):
+        description = [
+            "WordleSolver will help you solve a third-party Wordle.",
+            "",
+            "* Suggestions for words will be provided at each step.",
+            "* You may choose a word and obtain result.",
+            "* Enter the obtained result as a ternary string, ",
+            "  i.e., a string made of 0, 1, and 2.",
+            "  - 0 : (grey)   : an incorrect letter.",
+            "  - 1 : (yellow) : a correct letter in wrong position.",
+            "  - 2 : (green)  : a correct letter in correct position.",
+            ("  e.g., if the third letter turned green"
+             " and fifth letter turned yellow in the third party Wordle,"
+             " then you should input 00201 as the result obtained."),
+            "",
+            "Happy Wordling!"
+        ]
+        print("\n".join(description))
+        solver = WordleSolver(None)
+        while solver.num_attempts < MAXIMUM_ATTEMPTS:
+            print(f"\nAttempt {solver.num_attempts + 1}\n=========")
+            if len(solver.valid_words) < 10:
+                print(f"Valid Words: {solver.valid_words}")
+            print(f"Suggestions: {solver.best_options()[:5]}")
+            _word = input("Word chosen: ")
+            _result = input("Result obtained: ")
+            if _result.strip() == "22222":
+                print("\nCongratulations!")
+                break
+
+            result = zip(_word.strip(), map(int, _result.strip()))
+            solver.handle_result(result)
+    elif args.get("solve"):
         solver = WordleSolver(wordle)
         solver.solve()
     else:
