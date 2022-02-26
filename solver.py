@@ -6,9 +6,9 @@ Wordle Solver
 @author: Hrishikesh Terdalkar
 """
 
-import os
 import json
 import logging
+from pathlib import Path
 from collections import Counter
 from functools import cached_property
 
@@ -16,6 +16,7 @@ import networkx as nx
 
 from vocab import Vocabulary
 from wordle import Wordle
+from settings import COVERAGE_CACHE
 
 ###############################################################################
 
@@ -24,16 +25,12 @@ LOGGER.setLevel(logging.INFO)
 
 ###############################################################################
 
-COVERAGE_CACHE = "coverage.json"
-
-###############################################################################
-
 
 class WordleSolver:
     def __init__(
         self,
         wordle: Wordle = None,
-        coverage_cache: str = COVERAGE_CACHE
+        coverage_cache: str or Path = COVERAGE_CACHE
     ):
         self.wordle = wordle
         self.vocabulary = Vocabulary()
@@ -45,7 +42,7 @@ class WordleSolver:
 
         self.build_graph()
 
-        if os.path.isfile(coverage_cache):
+        if Path(coverage_cache).exists():
             with open(coverage_cache, mode="r") as f:
                 self.coverage = json.load(f)
         else:

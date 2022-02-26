@@ -9,7 +9,6 @@ Evaluate Solver
 ###############################################################################
 
 import json
-from pathlib import Path
 
 from tqdm import tqdm
 from numpy import average
@@ -17,10 +16,7 @@ from numpy import average
 from vocab import Vocabulary
 from wordle import Wordle
 from solver import WordleSolver
-
-###############################################################################
-
-EVALUATION_FILE = Path("evaluation.json")
+from settings import EVALUATION_FILE
 
 ###############################################################################
 

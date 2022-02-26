@@ -6,17 +6,11 @@ Create Inverted Word Index by Alphabets
 
 ###############################################################################
 
-import os
 import json
-import pickle
+from pathlib import Path
 from collections import defaultdict
 
-###############################################################################
-
-WORD_LENGTH = 5
-WORDS_FILE = "vocabulary.txt"
-VOCAB_CACHE = "vocabulary.json"
-INDEX_CACHE = "index.pickle"
+from settings import WORD_LENGTH, WORDS_FILE, VOCAB_CACHE, INDEX_CACHE
 
 ###############################################################################
 
@@ -24,16 +18,16 @@ INDEX_CACHE = "index.pickle"
 class Vocabulary:
     def __init__(
         self,
-        words_file=WORDS_FILE,
-        word_length=WORD_LENGTH,
-        vocab_cache=VOCAB_CACHE,
-        index_cache=INDEX_CACHE
+        words_file: str or Path = WORDS_FILE,
+        word_length: int = WORD_LENGTH,
+        vocab_cache: str or Path = VOCAB_CACHE,
+        index_cache: str or Path = INDEX_CACHE
     ):
         self.alphabet = set("abcdefghijklmnopqrstuvwxyz")
         self.word_length = word_length
-        self.words_file = words_file
-        self.vocab_cache = vocab_cache
-        self.index_cache = index_cache
+        self.words_file = Path(words_file)
+        self.vocab_cache = Path(vocab_cache)
+        self.index_cache = Path(index_cache)
 
         self.build_vocabulary()      # creates self.vocab
         self.build_index()           # creates self.index
@@ -47,7 +41,7 @@ class Vocabulary:
         }
 
     def build_vocabulary(self, use_cache=True):
-        if use_cache and os.path.isfile(self.vocab_cache):
+        if use_cache and self.vocab_cache.is_file():
             with open(self.vocab_cache, encoding="utf-8") as f:
                 self.vocab = json.load(f)
         else:
@@ -63,13 +57,13 @@ class Vocabulary:
         return True
 
     def build_index(self, use_cache=True):
-        if use_cache and os.path.isfile(self.index_cache):
-            with open(self.index_cache, mode="rb") as f:
-                self.index = pickle.load(f)
+        if use_cache and self.index_cache.is_file():
+            with open(self.index_cache, mode="r") as f:
+                self.index = json.load(f)
         else:
             self.index = {
-                'letter': defaultdict(dict),
-                'letter_position': defaultdict(dict)
+                "letter": defaultdict(dict),
+                "letter_position": defaultdict(dict)
             }
 
             for word in self.vocab:
@@ -85,8 +79,8 @@ class Vocabulary:
                 for l_p in letter_position:
                     self.index['letter_position'][l_p][word] = unique_letters
 
-            with open(self.index_cache, mode="wb") as f:
-                pickle.dump(self.index, f)
+            with open(self.index_cache, mode="w") as f:
+                json.dump(self.index, f)
 
             return True
 

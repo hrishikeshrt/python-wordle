@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Wordle for Python"""
 
-from collections import defaultdict
 import datetime
+from collections import defaultdict
 
 import numpy as np
 from rich.console import Console
@@ -11,12 +11,19 @@ from rich.padding import Padding
 from rich.panel import Panel
 
 from vocab import Vocabulary
+from settings import MAXIMUM_ATTEMPTS
 
 ###############################################################################
 
 
 class Wordle:
-    def __init__(self, word=None, max_attempts=6, seed="today", display=False):
+    def __init__(
+        self,
+        word: str = None,
+        max_attempts: int = MAXIMUM_ATTEMPTS,
+        seed: int = "today",
+        display: bool = False
+    ):
         self.vocabulary = Vocabulary()
         self.console = Console()
         self.display = display

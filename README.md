@@ -66,3 +66,9 @@ Solver has been evaluated on the entire vocabulary.
 * Success Count: 15263
 * Success Rate: 95.89
 * Average Attempts: 4.61
+
+## How to specify a custom vocabulary?
+
+* Make a directory `custom/` in the base directory.
+* Create a vocabulary file `vocabulary.txt` with one word on each line.
+* Place a `vocabulary.txt` file in `custom/` directory
