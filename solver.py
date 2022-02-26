@@ -137,7 +137,7 @@ class WordleSolver:
             avoid_set=avoid_set
         )
         options = sorted(
-            options_with_top_coverage + options_from_valid_words,
+            set(options_with_top_coverage + options_from_valid_words),
             key=lambda x: x[1], reverse=True
         )
         if options:
