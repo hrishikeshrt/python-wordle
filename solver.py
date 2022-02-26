@@ -62,9 +62,11 @@ class WordleSolver:
                     self.graph.add_edge(letter, word)
                     self.markers.add(letter)
 
-    def calculate_coverage(self, letters):
+    def calculate_coverage(self, letters, omit_known: bool = True):
+        """Calculate coverage of specified set of letters"""
+        omit_set = set(self.known_letters) if omit_known else set()
         node_boundary = nx.algorithms.boundary.node_boundary(
-            self.graph, set(letters)
+            self.graph, set(letters) - omit_set
         )
         graph_words_count = self.graph.number_of_nodes() - len(self.markers)
         return len(node_boundary) / graph_words_count * 100
@@ -121,10 +123,11 @@ class WordleSolver:
 
         # if less valid words than number of attempts left
         # just guess them all
-        attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
-        choose_from_valid_words = len(self.valid_words) <= attempts_left
-        if choose_from_valid_words:
-            return self.options_from_valid_words()
+        if self.wordle:
+            attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
+            choose_from_valid_words = len(self.valid_words) <= attempts_left
+            if choose_from_valid_words:
+                return self.options_from_valid_words()
 
         avoid_set = {
             k
