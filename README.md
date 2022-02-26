@@ -47,3 +47,19 @@ Solver roughly uses the following strategy,
     * Re-calculate coverage and guess again
 * If at any point, number of valid words drops below number of attempts left, guess the valid words one-by-one.
 * Additionally, there are heuristics to choose a word if multiple words with best coverage-score exist.
+
+## Evaluation
+
+Solver has been evaluated on the entire vocabulary.
+
+### Setup
+
+* Word Size: 5
+* Vocabulary Size: 15918
+* Maximum Attempts: 6
+
+### Performance
+
+* Success Count: 15263
+* Success Rate: 95.89
+* Average Attempts: 4.61
