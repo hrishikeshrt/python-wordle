@@ -1,13 +1,31 @@
-# Wordle
+# Wordle in Python
+
+Game, Solver and Helper!
+
+## Features
+
+* Comprehensive CLI Application
+    * Play Wordle in your terminal!
+    * Let the solver play it out for you!
+    * Use the helper mode for solving Wordles provided by other platforms!
+* New Wordle every day. 
+    * **Disclaimer**: This has nothing to do with the NYTimes Wordle.
+* Play more using `--random` option.
+* Reproducible random Wordle by specifying `--seed`.
+* `WordleSolver()` class for solving Wordle.
+* `--solve` option to let `WordleSolver()` do its work in front of your eyes!
+* `--helper` option to actiave the helper mode for help with solving Wordles provided by other platforms.
 
 ## Setup
+
+Install the requirements by typing the following command,
 
 ```console
 $ pip install -r requirements.txt
 ```
 ## Quickstart
 
-Start playing Wordle
+Start playing Wordle by typing the following command,
 
 ```console
 $ python cli.py
@@ -16,7 +34,7 @@ $ python cli.py
 ## Usage
 
 ```console
-usage: cli.py [-h] [--random] [--seed SEED] [--solve]
+usage: cli.py [-h] [--random] [--seed SEED] [--solve] [--helper]
 
 Wordle on your terminal
 
@@ -25,6 +43,8 @@ optional arguments:
   --random     Show a random Wordle
   --seed SEED  Seed the RNG
   --solve      Simulate WordleSolver
+  --helper     Take help from WordleSolver for a Wordle in a different platform
+
 ```
 
 ## Terminology
@@ -39,7 +59,7 @@ All of the following terms are valid in the context of a specific Wordle.
 
 ## Solver
 
-The Solver roughly uses the following strategy,
+WordleSolver roughly uses the following strategy,
 
 * Guess a word with highest (relative) coverage.
 * After each guess, eliminate words based on the clues, e.g.,
@@ -51,9 +71,22 @@ The Solver roughly uses the following strategy,
 * If at any point, number of valid words drops below number of attempts left, guess the valid words one-by-one.
 * Additionally, there are heuristics to choose a word if multiple words with best coverage-score exist.
 
+## Helper
+
+WordleSolver will help you solve a third-party Wordle.
+
+* Suggestions for words will be provided at each step.
+* You may choose a word and obtain result.
+* Enter the obtained result as a ternary string,
+  i.e., a string made of 0, 1, and 2.
+  - 0 : (grey)   : an incorrect letter.
+  - 1 : (yellow) : a correct letter in wrong position.
+  - 2 : (green)  : a correct letter in correct position.
+  e.g., if the third letter turned green and fifth letter turned yellow in the third party Wordle, then you should input 00201 as the result obtained.
+
 ## Evaluation
 
-Solver has been evaluated on the entire vocabulary.
+WordleSolver has been evaluated on the entire vocabulary.
 
 ### Setup
 
