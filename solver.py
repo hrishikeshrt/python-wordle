@@ -119,7 +119,7 @@ class WordleSolver:
         }).most_common(n)
 
     def best_options(self):
-        options_from_valid_words = self.options_from_valid_words()
+        options_from_valid_words = self.get_options_from_valid_words()
 
         if self.wordle:
             # if less valid words than number of attempts left
@@ -135,15 +135,25 @@ class WordleSolver:
             if isinstance(v, int)
         }
 
-        options = self.top_coverage(n=100, avoid_set=avoid_set)
-        multiple_best_options = [
-            option
-            for option in options + options_from_valid_words
-            if option[1] == options[0][1]
-        ]
+        options_with_top_coverage = self.top_coverage(
+            n=100,
+            avoid_set=avoid_set
+        )
+        options = sorted(
+            options_with_top_coverage + options_from_valid_words,
+            key=lambda x: x[1], reverse=True
+        )
+        if options:
+            possible_best_options = [
+                option
+                for option in options
+                if option[1] == options[0][1]
+            ]
+        else:
+            possible_best_options = []
 
         pruned_options = []
-        for option in multiple_best_options:
+        for option in possible_best_options:
             _word, _coverage = option
             if _word in self.guesses:
                 continue
@@ -157,7 +167,7 @@ class WordleSolver:
 
         return pruned_options or options_from_valid_words
 
-    def options_from_valid_words(self):
+    def get_options_from_valid_words(self):
         return sorted([
             (word, self.coverage[word])
             for word in self.valid_words
