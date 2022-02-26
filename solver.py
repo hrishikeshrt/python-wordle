@@ -119,15 +119,15 @@ class WordleSolver:
         }).most_common(n)
 
     def best_options(self):
-        coverage_threshold = 50
+        options_from_valid_words = self.options_from_valid_words()
 
-        # if less valid words than number of attempts left
-        # just guess them all
         if self.wordle:
+            # if less valid words than number of attempts left
+            # start guessing them directly
             attempts_left = self.wordle.max_attempts - self.wordle.num_attempts
             choose_from_valid_words = len(self.valid_words) <= attempts_left
             if choose_from_valid_words:
-                return self.options_from_valid_words()
+                return options_from_valid_words
 
         avoid_set = {
             k
@@ -138,7 +138,7 @@ class WordleSolver:
         options = self.top_coverage(n=100, avoid_set=avoid_set)
         multiple_best_options = [
             option
-            for option in options
+            for option in options + options_from_valid_words
             if option[1] == options[0][1]
         ]
 
@@ -150,19 +150,16 @@ class WordleSolver:
 
             for _position, _letter in enumerate(_word):
                 if isinstance(self.known_letters.get(_letter), set):
-                    if -_position in self.known_letters[_letter]:
+                    if _position in self.known_letters[_letter]:
                         break
             else:
                 pruned_options.append(option)
 
-        if not pruned_options or pruned_options[0][1] < coverage_threshold:
-            return self.options_from_valid_words()
-        else:
-            return pruned_options
+        return pruned_options or options_from_valid_words
 
     def options_from_valid_words(self):
         return sorted([
-            (word, self.calculate_coverage(word))
+            (word, self.coverage[word])
             for word in self.valid_words
             if word not in self.guesses
         ], key=lambda x: x[1], reverse=True)
@@ -181,7 +178,7 @@ class WordleSolver:
                 if letter not in self.known_letters:
                     self.known_letters[letter] = set()
                 if isinstance(self.known_letters[letter], set):
-                    self.known_letters[letter].add(-idx)
+                    self.known_letters[letter].add(idx)
 
                 eliminate_markers.add(f"{letter}{idx}")
                 for word in self.valid_words:
