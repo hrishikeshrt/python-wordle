@@ -71,12 +71,18 @@ if __name__ == '__main__':
         print("\n".join(description))
         solver = WordleSolver(None)
         while solver.num_attempts < MAXIMUM_ATTEMPTS:
-            print(f"\nAttempt {solver.num_attempts + 1}\n=========")
+            print(f"\nAttempt {solver.num_attempts + 1}\n=========\n")
             if len(solver.valid_words) < 10:
                 print(f"Valid Words: {solver.valid_words}")
             print(f"Suggestions: {solver.best_options()[:5]}")
-            _word = input("Word chosen: ")
-            _result = input("Result obtained: ")
+            _word = ""
+            while not _word.strip():
+                _word = input("Chosen word: ")
+
+            _result = ""
+            while not _result.strip():
+                _result = input("Obtained result: ")
+
             if _result.strip() == "22222":
                 print("\nCongratulations!")
                 break
@@ -89,7 +95,9 @@ if __name__ == '__main__':
     else:
         wordle.show()
         while not wordle.solved and not wordle.failed:
-            guess = input("Guess: ")
+            guess = ""
+            while not guess.strip():
+                guess = input("Guess: ")
             wordle.guess(guess)
 
     if args.get("random") and wordle.failed:
