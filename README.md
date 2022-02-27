@@ -96,9 +96,9 @@ WordleSolver has been evaluated on the entire vocabulary.
 
 ### Performance
 
-* Success Count: 15263
-* Success Rate: 95.89
-* Average Attempts: 4.61
+* Success Count: 15446
+* Success Rate: 97.03 %
+* Average Attempts: 4.58
 
 ## How to specify a custom vocabulary?
 
