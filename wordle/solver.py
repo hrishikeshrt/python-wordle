@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Wordle Solver
-
-@author: Hrishikesh Terdalkar
-"""
+"""Wordle Solver"""
 
 import json
 import logging
@@ -14,9 +10,9 @@ from functools import cached_property
 
 import networkx as nx
 
-from vocab import Vocabulary
-from wordle import Wordle
-from settings import COVERAGE_CACHE
+from .vocab import Vocabulary
+from .wordle import Wordle
+from .defaults import COVERAGE_CACHE
 
 ###############################################################################
 

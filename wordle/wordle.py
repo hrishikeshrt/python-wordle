@@ -10,8 +10,8 @@ from rich.console import Console
 from rich.padding import Padding
 from rich.panel import Panel
 
-from vocab import Vocabulary
-from settings import MAXIMUM_ATTEMPTS
+from .vocab import Vocabulary
+from .defaults import MAXIMUM_ATTEMPTS
 
 ###############################################################################
 

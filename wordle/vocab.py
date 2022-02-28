@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Create Inverted Word Index by Alphabets
-"""
+"""Wordle Vocabulary"""
 
 ###############################################################################
 
 import json
 from pathlib import Path
 from collections import defaultdict
+from typing import Iterable
 
-from settings import WORD_LENGTH, WORDS_FILE, VOCAB_CACHE, INDEX_CACHE
+from .defaults import (
+    ALPHABET,
+    WORD_LENGTH,
+    WORDS_FILE,
+    VOCAB_CACHE,
+    INDEX_CACHE
+)
 
 ###############################################################################
 
@@ -18,12 +23,13 @@ from settings import WORD_LENGTH, WORDS_FILE, VOCAB_CACHE, INDEX_CACHE
 class Vocabulary:
     def __init__(
         self,
+        alphabet: Iterable = ALPHABET,
         words_file: str or Path = WORDS_FILE,
         word_length: int = WORD_LENGTH,
         vocab_cache: str or Path = VOCAB_CACHE,
         index_cache: str or Path = INDEX_CACHE
     ):
-        self.alphabet = set("abcdefghijklmnopqrstuvwxyz")
+        self.alphabet = set(alphabet)
         self.word_length = word_length
         self.words_file = Path(words_file)
         self.vocab_cache = Path(vocab_cache)

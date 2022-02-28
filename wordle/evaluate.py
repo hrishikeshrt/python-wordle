@@ -13,10 +13,10 @@ import json
 from tqdm import tqdm
 from numpy import average
 
-from vocab import Vocabulary
-from wordle import Wordle
-from solver import WordleSolver
-from settings import EVALUATION_FILE
+from .vocab import Vocabulary
+from .wordle import Wordle
+from .solver import WordleSolver
+from .defaults import EVALUATION_FILE
 
 ###############################################################################
 

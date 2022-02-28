@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-CLI for Wordle
+"""CLI for Wordle"""
 
-@author: Hrishikesh Terdalkar
-"""
-
+import sys
 import logging
 
-from wordle import Wordle
-from solver import WordleSolver
-from settings import MAXIMUM_ATTEMPTS
+from .wordle import Wordle
+from .solver import WordleSolver
+from .defaults import MAXIMUM_ATTEMPTS
 
 ###############################################################################
 
@@ -19,7 +16,8 @@ ROOT_LOGGER.hasHandlers() or ROOT_LOGGER.addHandler(logging.StreamHandler())
 
 ###############################################################################
 
-if __name__ == '__main__':
+
+def main():
     import argparse
     parser = argparse.ArgumentParser(description="Wordle on your terminal")
     parser.add_argument(
@@ -53,7 +51,8 @@ if __name__ == '__main__':
 
     if args.get("helper"):
         description = [
-            "WordleSolver will help you solve a third-party Wordle.",
+            "Helper Mode",
+            "===========",
             "",
             "* Suggestions for words will be provided at each step.",
             "* You may choose a word and obtain result.",
@@ -102,3 +101,12 @@ if __name__ == '__main__':
 
     if args.get("random") and wordle.failed:
         wordle.message(f"The word was '{wordle.word}'.")
+
+    return 0
+
+
+###############################################################################
+
+
+if __name__ == "__main__":
+    sys.exit(main())  # pragma: no cover
