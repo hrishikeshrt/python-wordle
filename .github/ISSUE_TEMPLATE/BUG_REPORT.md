@@ -6,7 +6,7 @@ labels: bug
 assignees: ''
 ---
 
-* wordle-utils version:
+* python-wordle version:
 * Python version:
 * Operating System:
 
