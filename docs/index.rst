@@ -1,15 +1,15 @@
 Welcome to Wordle's documentation!
 ==================================
 
-.. image:: https://img.shields.io/pypi/v/python_wordle?color=success
-        :target: https://pypi.python.org/pypi/python_wordle
+.. image:: https://img.shields.io/pypi/v/python-wordle?color=success
+        :target: https://pypi.python.org/pypi/python-wordle
 
 .. image:: https://readthedocs.org/projects/python-wordle/badge/?version=latest
         :target: https://python-wordle.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-.. image:: https://img.shields.io/pypi/pyversions/python_wordle
-        :target: https://pypi.python.org/pypi/python_wordle
+.. image:: https://img.shields.io/pypi/pyversions/python-wordle
+        :target: https://pypi.python.org/pypi/python-wordle
         :alt: Python Version Support
 
 .. image:: https://img.shields.io/github/issues/hrishikeshrt/python-wordle

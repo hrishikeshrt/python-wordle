@@ -33,7 +33,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Wordle -- Game, Solver, Helper!",
+    description="Wordle -- Game, Solver and Helper!",
     entry_points={
         'console_scripts': [
             'wordle=wordle.cli:main',

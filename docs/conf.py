@@ -169,7 +169,7 @@ texinfo_documents = [
      'Wordle Documentation',
      author,
      'python-wordle',
-     'Wordle -- Game, Solver, Helper!',
+     'Wordle -- Game, Solver and Helper!',
      'Miscellaneous'),
 ]
 
