@@ -42,11 +42,11 @@ Features
     * Use the helper mode for solving Wordles provided by other platforms!
 * New Wordle every day.
     * **Disclaimer**: This has nothing to do with the NYTimes Wordle.
-* Play more using `--random` option.
-* Reproducible random Wordle by specifying `--seed`.
-* `WordleSolver()` class for solving Wordle.
-* `--solve` option to let `WordleSolver()` do its work in front of your eyes!
-* `--helper` option to activate the helper mode for help with solving Wordles provided by other platforms.
+* Play more using :code:`--random` option.
+* Reproducible random Wordle by specifying :code:`--seed`.
+* :code:`WordleSolver()` class for solving Wordle.
+* :code:`--solve` option to let :code:`WordleSolver()` do its work in front of your eyes!
+* :code:`--helper` option to activate the helper mode for help with solving Wordles provided by other platforms.
 
 Install
 =======
@@ -91,10 +91,10 @@ Solver roughly uses the following strategy,
 
 * Guess a word with highest (relative) coverage.
 * After each guess, eliminate words based on the clues, e.g.,
-    * Remove all words that contain an `incorrect-letter`
-    * Remove all words that do not contain the identified `(correct-letter, correct-position)` combinations
-    * Remove all words that contain the identified `(correct-letter, incorrect-position)` combinations
-    * Remove all words that do not contain a `correct-letter`
+    * Remove all words that contain an :code:`incorrect-letter`
+    * Remove all words that do not contain the identified :code:`(correct-letter, correct-position)` combinations
+    * Remove all words that contain the identified :code:`(correct-letter, incorrect-position)` combinations
+    * Remove all words that do not contain a :code:`correct-letter`
     * Re-calculate (relative) coverage and guess again
 * If at any point, number of valid words drops below number of attempts left, guess the valid words one-by-one.
 * Additionally, there are heuristics to choose a word if multiple words with best coverage-score exist.
