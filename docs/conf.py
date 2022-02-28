@@ -172,6 +172,3 @@ texinfo_documents = [
      'Wordle -- Game, Solver and Helper!',
      'Miscellaneous'),
 ]
-
-
-

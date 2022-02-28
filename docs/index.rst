@@ -46,6 +46,52 @@ Features
 * :code:`--solve` option to let :code:`WordleSolver()` do its work in front of your eyes!
 * :code:`--helper` option to activate the helper mode for help with solving Wordles provided by other platforms.
 
+Example
+=======
+
+.. image:: ../screenshot.png
+    :target: https://github.com/hrishikeshrt/python-wordle
+
+
+Helper Session
+--------------
+
+.. code-block:: console
+
+    Attempt 1
+    =========
+
+    Suggestions: [('kioea', 95.7343887423043)]
+    Chosen word: aeons
+    Obtained result: 01201
+    Eliminated 15868 options.
+
+    Attempt 2
+    =========
+
+    Suggestions: [('thrip', 78.0), ('thirl', 78.0)]
+    Chosen word: thrip
+    Obtained result: 00000
+    Eliminated 39 options.
+
+    Attempt 3
+    =========
+
+    Suggestions: [('blayk', 72.72727272727273), ('milky', 72.72727272727273), ('bulky', 72.72727272727273), ('lucky', 72.72727272727273), ('mckay', 72.72727272727273)]
+    Chosen word: milky
+    Obtained result: 10020
+    Eliminated 10 options.
+
+    Attempt 4
+    =========
+
+    Valid Words: {'smoke'}
+    Suggestions: [('smoke', 0.0)]
+    Chosen word: smoke
+    Obtained result: 22222
+
+    Congratulations!
+
 Terminology
 ===========
 
@@ -79,12 +125,11 @@ Helper mode can be used to get assistance while solving Wordle from another prov
 
 * Suggestions for words will be provided at each step.
 * You may choose a word and obtain result.
-* Enter the obtained result as a ternary string,
-  i.e., a string made of 0, 1, and 2.
-  - 0 : (grey)   : an incorrect letter.
-  - 1 : (yellow) : a correct letter in wrong position.
-  - 2 : (green)  : a correct letter in correct position.
-  e.g., if the third letter turned green and fifth letter turned yellow in the third party Wordle, then you should input 00201 as the result obtained.
+* Enter the obtained result as a ternary string, i.e., a string made of 0, 1, and 2.
+    - 0 : (grey)   : an incorrect letter.
+    - 1 : (yellow) : a correct letter in wrong position.
+    - 2 : (green)  : a correct letter in correct position.
+* e.g., if the third letter turned green and fifth letter turned yellow in the third party Wordle, then you should input 00201 as the result obtained.
 
 Evaluation
 ==========
@@ -104,6 +149,7 @@ Performance
 * Success Count: 15446
 * Success Rate: 97.03 %
 * Average Attempts: 4.58
+
 
 .. toctree::
    :maxdepth: 2
