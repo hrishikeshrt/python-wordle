@@ -6,8 +6,8 @@ Wordle
 .. image:: https://img.shields.io/pypi/v/python_wordle?color=success
         :target: https://pypi.python.org/pypi/python_wordle
 
-.. image:: https://readthedocs.org/projects/python_wordle/badge/?version=latest
-        :target: https://python_wordle.readthedocs.io/en/latest/?version=latest
+.. image:: https://readthedocs.org/projects/python-wordle/badge/?version=latest
+        :target: https://python-wordle.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/pypi/pyversions/python_wordle
@@ -31,16 +31,7 @@ Wordle -- Game, Solver and Helper!
 
 
 * Free software: GNU General Public License v3
-* Documentation: https://python_wordle.readthedocs.io.
-
-Install
-=======
-
-To install, run this command in your terminal:
-
-.. code-block:: console
-
-    $ pip install python_wordle
+* Documentation: https://python-wordle.readthedocs.io.
 
 Features
 ========
@@ -55,7 +46,32 @@ Features
 * Reproducible random Wordle by specifying `--seed`.
 * `WordleSolver()` class for solving Wordle.
 * `--solve` option to let `WordleSolver()` do its work in front of your eyes!
-* `--helper` option to actiave the helper mode for help with solving Wordles provided by other platforms.
+* `--helper` option to activate the helper mode for help with solving Wordles provided by other platforms.
+
+Install
+=======
+
+To install, run this command in your terminal:
+
+.. code-block:: console
+
+    $ pip install python_wordle
+
+Usage
+=====
+
+.. code-block:: console
+
+    usage: wordle [-h] [--random] [--seed SEED] [--solve] [--helper]
+
+    Wordle on your terminal
+
+    optional arguments:
+    -h, --help   show this help message and exit
+    --random     Show a random Wordle
+    --seed SEED  Seed the RNG
+    --solve      Simulate WordleSolver
+    --helper     Take help from WordleSolver for a Wordle in a different platform
 
 Terminology
 ===========
@@ -71,7 +87,7 @@ All of the following terms are valid in the context of a specific Wordle.
 Solver
 ======
 
-WordleSolver roughly uses the following strategy,
+Solver roughly uses the following strategy,
 
 * Guess a word with highest (relative) coverage.
 * After each guess, eliminate words based on the clues, e.g.,
@@ -115,19 +131,3 @@ Performance
 * Success Count: 15446
 * Success Rate: 97.03 %
 * Average Attempts: 4.58
-
-Usage
-=====
-
-.. code-block:: console
-
-    usage: wordle [-h] [--random] [--seed SEED] [--solve] [--helper]
-
-    Wordle on your terminal
-
-    optional arguments:
-    -h, --help   show this help message and exit
-    --random     Show a random Wordle
-    --seed SEED  Seed the RNG
-    --solve      Simulate WordleSolver
-    --helper     Take help from WordleSolver for a Wordle in a different platform
