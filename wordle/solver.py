@@ -136,11 +136,13 @@ class WordleSolver:
             set(options_with_top_coverage + options_from_valid_words),
             key=lambda x: x[1], reverse=True
         )
+        top_values = sorted(set(x[1] for x in options), reverse=True)
+
         if options:
             possible_best_options = [
                 option
                 for option in options
-                if option[1] == options[0][1]
+                if option[1] in top_values[:3]
             ]
         else:
             possible_best_options = []
