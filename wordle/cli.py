@@ -76,7 +76,7 @@ def main():
 
                 if len(solver.valid_words) == 1:
                     print("\nCongratulations!")
-                    print(f"Solution: {solver.valid_words[0]}")
+                    print(f"Solution: {next(iter(solver.valid_words))}")
                     break
 
             print(f"Suggestions: {solver.best_options()[:5]}")
