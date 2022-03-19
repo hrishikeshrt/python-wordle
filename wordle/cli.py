@@ -73,6 +73,12 @@ def main():
             print(f"\nAttempt {solver.num_attempts + 1}\n=========\n")
             if len(solver.valid_words) < 10:
                 print(f"Valid Words: {solver.valid_words}")
+
+                if len(solver.valid_words) == 1:
+                    print("\nCongratulations!")
+                    print(f"Solution: {solver.valid_words[0]}")
+                    break
+
             print(f"Suggestions: {solver.best_options()[:5]}")
             _word = ""
             while not _word.strip():
@@ -84,6 +90,7 @@ def main():
 
             if _result.strip() == "22222":
                 print("\nCongratulations!")
+                print(f"Solution: {_word}")
                 break
 
             result = zip(_word.strip(), map(int, _result.strip()))
